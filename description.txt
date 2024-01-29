@@ -1,0 +1,54 @@
+1. Exercises library
+    - list of Exercises
+    - search by title
+    - groups of muscles
+7. Exercise
+    - name
+    - description
+    - images
+    - video
+2. User
+    - list of all User
+    - name
+    - age
+    - sex
+    - is a coach
+    - user can be a coach and a student
+    - note
+    - start weight
+    - avatar
+    - email
+    - password
+    - user must confirm his email
+3. trening course
+    - coach
+    - student
+    - note
+    - price
+4. trening plan
+    - course
+    - start date
+    - end date
+    - day plans list
+    - note
+5. day plan
+    - name
+    - day
+    - day plan Exercises list
+    - note
+6. day plan Exercise
+    - Exercise
+    - set
+    - repetition
+    - weight
+    - note
+8. day trening result
+    - day plan Exercise
+    - real set
+    - real repetition
+    - real weight
+    - note
+    - student weight
+9. coach - student chat
+10. design
+
