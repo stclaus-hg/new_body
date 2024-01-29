@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from app.users.schemas import Sex
+from app.users import models
+from app.core.database import engine
 
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

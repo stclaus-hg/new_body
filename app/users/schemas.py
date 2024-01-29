@@ -7,10 +7,21 @@ class Sex(str, Enum):
     female = "female"
 
 
-class User(BaseModel):
-    id: int | None = None
+class UserBase(BaseModel):
     name: str
-    password: str
     email: str
     is_teacher: bool = False
     sex: Sex
+
+    class Config:
+        orm_mode = True
+
+
+class UserCreate(UserBase):
+    password: str
+    re_password: str
+
+
+class User(UserBase):
+    id: int | None = None
+    is_active: bool = False
