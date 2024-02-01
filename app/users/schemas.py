@@ -10,11 +10,11 @@ class Sex(str, Enum):
 class UserBase(BaseModel):
     name: str
     email: str
-    is_teacher: bool = False
+    is_coach: bool = False
     sex: Sex
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 
 class UserCreate(UserBase):

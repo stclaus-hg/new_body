@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
-
+from sqlalchemy.orm import Session
 from app.main import app
-from app.users.schemas import User, Sex
-
+from app.users.schemas import UserCreate, Sex
+from app.users import crud
 
 client = TestClient(app)
 
@@ -13,34 +13,38 @@ def test_read_main():
     assert response.json() == {"msg": "Hello World"}
 
 
-def test_user_model():
+def test_signup_user():
     user_data = {
         "name": "John Doe",
-        "sex": Sex.male.value,
+        "sex": "male",
         "password": "12345",
+        "re_password": "12345",
         "email": "john@example.com",
-        "is_teacher": True
+        "is_coach": False
     }
-    user = User(**user_data)
-    user.save()
-    assert user.name == "John Doe"
-    assert user.sex == Sex.male
-    assert user.password == "12345"
-    assert user.email == "john@example.com"
-    assert user.is_teacher
+    response = client.post("/users/", json=user_data)
+    assert response.status_code == 200
+    assert response.json() == user_data
 
 
-def _test_signup_user():
+def test_create_user(db: Session):
     user_data = {
         "name": "John Doe",
-        "sex": Sex.male.value,
-        "password1": "12345",
-        "password2": "12345",
+        "sex": Sex.male,
+        "password": "12345",
+        "hashed_password": "12345fakehashed",
         "email": "john@example.com"
     }
-    response = client.post("/user/sign-up", user_data)
-    assert response.status_code == 200
-    assert response.json() == {
-        "msg": "User was created successful. Please check you email to "
-        "confirm the email addres john@example.com"
-    }
+    user_in = UserCreate(
+        name=user_data["name"],
+        sex=Sex.male,
+        email=user_data["email"],
+        password=user_data["password"],
+        re_password=user_data["password"]
+    )
+    user = crud.create_user(db, user=user_in)
+
+    assert user.email == "john@example.com"
+    assert user.hashed_password == user_data['hashed_password']
+    assert user.sex == user_data["sex"]
+    assert user.name == user_data["name"]
