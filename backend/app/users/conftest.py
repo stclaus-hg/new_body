@@ -4,7 +4,7 @@ from typing import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-from app.core.database import Base
+from app.core.db_helper import Base
 from app.main import app, get_db
 
 SQLALCHEMY_DATABASE_URL = "sqlite://"

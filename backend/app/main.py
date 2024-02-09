@@ -1,21 +1,18 @@
 from fastapi import FastAPI
 from app.users import models
 from app.users.routers import router as user_router
-from app.core.database import engine, SessionLocal
+from app.core.db_helper import engine, SessionLocal, db_helper
+from contextlib import asynccontextmanager
 
 
-models.Base.metadata.create_all(bind=engine)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with db_helper.engine.begin() as conn:
+        await conn.run_sync(models.Base.metadata.create_all)     
+    yield
 
-app = FastAPI()
-app.include_router(user_router)
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+app = FastAPI(lifespan=lifespan)
+app.include_router(user_router, prefix="/users")
 
 
 @app.get("/")

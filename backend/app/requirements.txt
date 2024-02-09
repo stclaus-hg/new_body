@@ -2,4 +2,6 @@ fastapi[all]
 pydantic
 mypy
 pytest
-sqlalchemy
+sqlalchemy[asyncio]
+pydantic-settings
+aiosqlite
