@@ -1,0 +1,7 @@
+fastapi[all]
+pydantic
+mypy
+pytest
+sqlalchemy[asyncio]
+pydantic-settings
+aiosqlite

@@ -1,5 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class Sex(str, Enum):
@@ -23,5 +23,7 @@ class UserCreate(UserBase):
 
 
 class User(UserBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int | None = None
     is_active: bool = False

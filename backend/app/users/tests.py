@@ -42,7 +42,7 @@ def test_create_user(db: Session):
         password=user_data["password"],
         re_password=user_data["password"]
     )
-    user = crud.create_user(db, user=user_in)
+    user = crud.create_user(db, user_in=user_in)
 
     assert user.email == "john@example.com"
     assert user.hashed_password == user_data['hashed_password']
