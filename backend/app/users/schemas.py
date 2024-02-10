@@ -13,14 +13,17 @@ class UserBase(BaseModel):
     is_coach: bool = False
     sex: Sex
 
-    class ConfigDict:
-        from_attributes = True
-
-
 class UserCreate(UserBase):
     password: str
     re_password: str
 
+class UserUpdate(BaseModel):
+    name: str | None = None
+    email: str | None = None
+    is_coach: bool | None = None
+    sex: Sex | None = None
+    password: str | None = None
+    re_password: str | None = None
 
 class User(UserBase):
     model_config = ConfigDict(from_attributes=True)

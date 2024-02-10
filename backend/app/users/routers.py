@@ -1,18 +1,46 @@
 from fastapi import APIRouter, Depends
-from .schemas import UserCreate
+from .schemas import UserCreate, User, UserUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db_helper import db_helper
-from app.users import crud
+from . import crud
+from .dependencies import user_by_id
+from .models import User as UserModel
 
 router = APIRouter(tags=["users"])
 
 
-@router.get("/")
-async def get_users(session: AsyncSession=Depends(db_helper.scope_session_dependency)):
+@router.get("/", response_model=list[User])
+async def get_users(
+    session: AsyncSession = Depends(db_helper.scope_session_dependency),
+):
     return await crud.get_users(session=session)
 
 
-@router.post("/")
-async def user_sign_up(user: UserCreate, session: AsyncSession=Depends(db_helper.scope_session_dependency)):
+@router.get("/{user_id}/", response_model=User)
+async def get_user(user: User = Depends(user_by_id)):
+    return user
+
+
+@router.post("/", response_model=User)
+async def create_user(
+    user: UserCreate,
+    session: AsyncSession = Depends(db_helper.scope_session_dependency),
+):
     return await crud.create_user(session=session, user_in=user)
 
+
+@router.patch("/{user_id}/", response_model=User)
+async def update_user(
+    user_in: UserUpdate,
+    user: UserModel = Depends(user_by_id),
+    session: AsyncSession = Depends(db_helper.scope_session_dependency),
+):
+    return await crud.update_user(session=session, user=user, user_in=user_in)
+
+
+@router.delete("/{user_id}/")
+async def delete_user(
+    user: UserModel = Depends(user_by_id),
+    session: AsyncSession = Depends(db_helper.scope_session_dependency),
+):
+    await crud.delete_user(session=session, user=user)
